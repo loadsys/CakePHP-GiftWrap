@@ -6,12 +6,29 @@ App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
 
 class PresenterComponent extends Component {
 	private $_controller;
+	private $_varName = 'presenter';
 	private $_uses = null;
 	private $_data = array();
 	private $_options = array();
 
+	public function __construct(ComponentCollection $collection, $settings = array()) {
+		parent::__construct($collection, $settings);
+		foreach (array('varName', 'options') as $key) {
+			if (array_key_exists($key, $settings)) {
+				$var = '_'.$key;
+				$this->{$var} = $settings[$key];
+			}
+		}
+	}
+
 	public function startup(Controller $controller) {
 		$this->_controller = $controller;
+	}
+
+	public function beforeRender(Controller $controller) {
+		if (!isset($this->_controller->viewVars[$this->_varName])) {
+			$this->_controller->set($this->_varName, $this->create());
+		}
 	}
 
 	public function create($name = null) {
@@ -25,6 +42,10 @@ class PresenterComponent extends Component {
 
 	public function uses($name) {
 		$this->_uses = $this->convertName($name);
+	}
+
+	public function varName($name) {
+		$this->_varName = $name;
 	}
 
 	public function set($key, $value = null) {
