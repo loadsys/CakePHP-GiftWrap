@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Presenter', 'GiftWrap.Presenter');
+App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
 
 class PresenterTest extends CakeTestCase {
 	public function testPresenterAssignsKeysInArrayAsProperties() {
