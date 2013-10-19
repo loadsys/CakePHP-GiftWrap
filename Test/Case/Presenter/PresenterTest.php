@@ -2,6 +2,10 @@
 
 App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
 
+class TestView {
+	public function viewMethod() { return 'view method'; }
+}
+
 class PresenterTest extends CakeTestCase {
 	public function testPresenterAssignsKeysInArrayAsProperties() {
 		$presenter = new Presenter(array('one' => 1, 'two' => 'TWO'));
@@ -49,5 +53,21 @@ class PresenterTest extends CakeTestCase {
 		$presenter = new Presenter($data, array('content' => 'proxy'));
 		$this->assertEquals(3, $presenter['three']);
 		$this->assertEquals(4, $presenter['four']);
+	}
+
+	public function testPresenterProxiesUndefinedMethodsToView() {
+		$mock = $this->getMock('stdClass');
+		$mock->View = new TestView;
+		$presenter = new Presenter(array(), array(), $mock);
+		$this->assertEquals('view method', $presenter->viewMethod());
+	}
+
+	public function testPresenterLooksForPropertyInViewHelpersIfNotDefined() {
+		$mock = $this->getMock('stdClass');
+		$mock->View = new TestView;
+		$mock->View->Helpers = new stdClass;
+		$mock->View->Helpers->Html = 'Html Helper';
+		$presenter = new Presenter(array(), array(), $mock);
+		$this->assertEquals('Html Helper', $presenter->Html);
 	}
 }

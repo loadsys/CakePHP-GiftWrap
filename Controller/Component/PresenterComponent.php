@@ -68,7 +68,7 @@ class PresenterComponent extends Component {
 			$str = "Could not find presenter. Create $class in APP/Presenter/$class.php";
 			throw new LogicException($str);
 		}
-		return new $class($data, $options);
+		return new $class($data, $options, $this->_controller);
 	}
 
 	private function getPresenterClass($name = null) {

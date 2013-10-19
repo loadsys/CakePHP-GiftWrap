@@ -3,9 +3,11 @@
 class Presenter implements arrayaccess {
 	private $_options = array();
 	private $_defaults = array('content' => 'content');
+	private $_controller = null;
 
-	public function __construct($data = array(), $options = array()) {
+	public function __construct($data = array(), $options = array(), $controller = null) {
 		$this->_options = $options + $this->_defaults;
+		$this->_controller = $controller;
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
 				$this->{$key} = $value;
@@ -24,18 +26,15 @@ class Presenter implements arrayaccess {
 	}
 
 	public function offsetGet($offset) {
-		try {
+		if (property_exists($this, $offset)) {
 			$value = $this->{$offset};
-		}	catch (Exception $e) {
-			try {
-				if (is_array($this->{$this->_options['content']})) {
-					$value = $this->{$this->_options['content']}[$offset];
-				} else {
-					throw $e;
-				}
-			} catch (Exception $f) {
-				throw $e;
-			}
+		} else if (
+			is_array($this->{$this->_options['content']}) &&
+			array_key_exists($offset, $this->{$this->_options['content']})
+		) {
+			$value = $this->{$this->_options['content']}[$offset];
+		} else {
+			trigger_error("Undefined index '$offset'");
 		}
 		return $value;
 	}
@@ -46,5 +45,17 @@ class Presenter implements arrayaccess {
 
 	public function offsetExists($offset) {
 		return property_exists($this, $offset);
+	}
+
+	public function __get($name) {
+		if ($this->_controller && $this->_controller->View) {
+			return $this->_controller->View->Helpers->{$name};
+		}
+	}
+
+	public function __call($method, $args = array()) {
+		if ($this->_controller && $this->_controller->View) {
+			return call_user_func_array(array($this->_controller->View, $method), $args);
+		}
 	}
 }

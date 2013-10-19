@@ -98,4 +98,15 @@ class PresenterComponentTest extends CakeTestCase {
 		$this->assertEquals(array('first' => 1), $presenter->list[0]->content);
 		$this->assertEquals(array('second' => 2), $presenter->list[1]->content);
 	}
+
+	public function testCreatedPresenterHasTheControllerForAccessToView() {
+		$mock = $this->getMock('Controller');
+		$mock->View = new stdClass;
+		$mock->View->Helpers = new stdClass;
+		$mock->View->Helpers->Form = 'Form Helper';
+		$this->Controller = $mock;
+		$this->Presenter->startup($this->Controller);
+		$presenter = $this->Presenter->create();
+		$this->assertEquals('Form Helper', $presenter->Form);
+	}
 }
