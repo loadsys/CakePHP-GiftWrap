@@ -12,14 +12,18 @@ class PresenterListIterator extends ArrayIterator {
 	}
 
 	public function current() {
-		return $this->wrap(parent::current());
+		return $this->cache($this->key(), parent::current());
 	}
 
 	public function offsetGet($index) {
+		return $this->cache($index, parent::offsetGet($index));
+	}
+
+	private function cache($index, $value) {
 		if (isset($this->_cache[$index])) {
 			$val = $this->_cache[$index];
 		} else {
-			$val = $this->_cache[$index] = $this->wrap(parent::offsetGet($index));
+			$val = $this->_cache[$index] = $this->wrap($value);
 		}
 		return $val;
 	}
