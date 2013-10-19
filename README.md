@@ -43,11 +43,11 @@ public function index() {
   $this->Presenter->setEachPresenter('posts', $posts, 'PostPresenter');
 }
 public function view($id) {
-  $content = $this->Post->read($id);
+  $model = $this->Post->read($id);
   $user = $this->currentUser();
   $this->Presenter->uses('PostPresenter');
   $this->Presenter->setPresenter('user', $user, 'UserPresenter');
-  $this->Presenter->set(compact('content'));
+  $this->Presenter->set(compact('model'));
 }
 ```
 
