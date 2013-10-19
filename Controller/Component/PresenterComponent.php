@@ -5,11 +5,11 @@ App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
 App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
 
 class PresenterComponent extends Component {
-	private $_controller;
-	private $_varName = 'presenter';
-	private $_uses = null;
-	private $_data = array();
-	private $_options = array();
+	protected $_controller;
+	protected $_varName = 'presenter';
+	protected $_uses = null;
+	protected $_data = array();
+	protected $_options = array();
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
@@ -63,7 +63,7 @@ class PresenterComponent extends Component {
 		$this->set($key, $iter);
 	}
 
-	private function newPresenter($class, $data, $options) {
+	protected function newPresenter($class, $data, $options) {
 		if (!$class) {
 			$str = "Could not find presenter. Create $class in APP/Presenter/$class.php";
 			throw new LogicException($str);
@@ -71,7 +71,7 @@ class PresenterComponent extends Component {
 		return new $class($data, $options, $this->_controller);
 	}
 
-	private function getPresenterClass($name = null) {
+	protected function getPresenterClass($name = null) {
 		$attempts = $this->getClassAttemptNames($name);
 		$presenter = false;
 		while (!empty($attempts)) {
@@ -87,7 +87,7 @@ class PresenterComponent extends Component {
 		return $presenter;
 	}
 
-	private function getClassAttemptNames($name) {
+	protected function getClassAttemptNames($name) {
 		if (is_string($name)) {
 			$attempts = array($this->convertName($name));
 		} else if (is_string($this->_uses)) {
@@ -102,17 +102,17 @@ class PresenterComponent extends Component {
 		return $attempts;
 	}
 
-	private function convertName($name) {
+	protected function convertName($name) {
 		$camel = Inflector::camelize($name);
 		return preg_replace('/Presenter$/', '', $camel).'Presenter';
 	}
 
-	private function controllerActionName() {
+	protected function controllerActionName() {
 		$name = $this->_controller->name . '_' . $this->_controller->action;
 		return $this->convertName($name);
 	}
 
-	private function controllerName() {
+	protected function controllerName() {
 		return $this->convertName($this->_controller->name);
 	}
 }

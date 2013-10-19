@@ -1,9 +1,9 @@
 <?php
 
 class Presenter implements arrayaccess {
-	private $_options = array();
-	private $_defaults = array('content' => 'content');
-	private $_controller = null;
+	protected $_options = array();
+	protected $_defaults = array('content' => 'content');
+	protected $_controller = null;
 
 	public function __construct($data = array(), $options = array(), $controller = null) {
 		$this->_options = $options + $this->_defaults;
