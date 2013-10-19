@@ -14,12 +14,21 @@ echo "CakePlugin::load('CakePHP-GiftWrap', array('bootstrap' => true));" >> Conf
 
 ## Usage
 
+### Controller usage
+
 Add the component to the list of components in the controller property.
 
 ```
 // Controller/PostsController.php
 class PostsController extends AppController {
-  public $components = array('CakePHP-GiftWrap.Presenter');
+  public $components = array(
+    'CakePHP-GiftWrap.Presenter' => array(
+      'viewVar' => 'object', // Defaults to 'presenter'
+      'options' => array( // Passed the the creation of the default presenter
+        'contextKey' => 'context' // Defaults to 'model'
+      )
+    )
+  );
   ...
 }
 ```
@@ -52,3 +61,20 @@ public function view($id) {
 ```
 
 In the `PresenterComponent::beforeRender()`, the presenter object is created and set to the view in the `$presenter` variable.
+
+### Creating a Presenter
+
+The component will look for presenters in `APP/Presenter`. These classes should inherit from
+`Presenter`:
+
+```
+// APP/Presenter/PostPresenter.php
+
+App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+
+class PostPresenter extends Presenter {
+}
+```
+
+Here you can define view specific logic and use the values set to the presenter.
+
