@@ -1,6 +1,8 @@
 <?php
 
 class Presenter implements arrayaccess {
+	public $requiredProperties = array();
+
 	protected $_options = array();
 	protected $_defaults = array('contextKey' => 'model');
 	protected $_controller = null;
@@ -8,13 +10,13 @@ class Presenter implements arrayaccess {
 	public function __construct($data = array(), $options = array(), $controller = null) {
 		$this->_options = $options + $this->_defaults;
 		$this->_controller = $controller;
-		if (is_array($data)) {
-			foreach ($data as $key => $value) {
-				$this->{$key} = $value;
-			}
-		} else {
-			$this->{$this->_options['contextKey']} = $data;
+		if (!is_array($data)) {
+			$data = array($this->_options['contextKey'] => $data);
 		}
+		foreach ($data as $key => $value) {
+			$this->{$key} = $value;
+		}
+		$this->checkRequiredProperties($this->requiredProperties, $data);
 	}
 
 	public function setContext($value) {
@@ -56,6 +58,17 @@ class Presenter implements arrayaccess {
 	public function __call($method, $args = array()) {
 		if ($this->_controller && $this->_controller->View) {
 			return call_user_func_array(array($this->_controller->View, $method), $args);
+		}
+	}
+
+	protected function checkRequiredProperties($required, $data) {
+		if (is_array($required) && !empty($required)) {
+			$diff = array_diff($required, array_keys($data));
+			if (!empty($diff)) {
+				$class = get_class($this);
+				$missing = join(', ', $diff);
+				throw new LogicException($class . ' missing properties: ' . $missing);
+			}
 		}
 	}
 }

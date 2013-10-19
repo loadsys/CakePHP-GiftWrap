@@ -6,6 +6,10 @@ class TestView {
 	public function viewMethod() { return 'view method'; }
 }
 
+class RequiredPresenter extends Presenter {
+	public $requiredProperties = array('one', 'two');
+}
+
 class PresenterTest extends CakeTestCase {
 	public function testPresenterAssignsKeysInArrayAsProperties() {
 		$presenter = new Presenter(array('one' => 1, 'two' => 'TWO'));
@@ -69,5 +73,20 @@ class PresenterTest extends CakeTestCase {
 		$mock->View->Helpers->Html = 'Html Helper';
 		$presenter = new Presenter(array(), array(), $mock);
 		$this->assertEquals('Html Helper', $presenter->Html);
+	}
+
+	public function testPresenterThrowsErrorOnCreationWhenNotCreatedWithRequiredProps() {
+		try {
+			$presenter = new RequiredPresenter(array('one' => 1));
+		} catch (Exception $e) {
+			$this->assertEquals('RequiredPresenter missing properties: two', $e->getMessage());
+			return;
+		}
+		$this->assertTrue(false, 'Exception not thrown for requiredProperties');
+	}
+
+	public function testPresenterDoesNotErrorWhenGivenMoreThanRequiredProps() {
+		$presenter = new RequiredPresenter(array('one' => 1, 'two' => 2, 'three' => 3));
+		$this->assertTrue(true, 'Exception not thrown for requiredProperties');
 	}
 }
