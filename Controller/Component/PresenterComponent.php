@@ -32,12 +32,8 @@ class PresenterComponent extends Component {
 	}
 
 	public function create($name = null) {
-		$presenter = $this->getPresenterClass($name);
-		if (!$presenter) {
-			// TODO: Describe what class to create and where.
-			throw new LogicException("Could not find presenter.");
-		}
-		return new $presenter($this->_data, $this->_options);
+		$class = $this->getPresenterClass($name);
+		return $this->newPresenter($class, $this->_data, $this->_options);
 	}
 
 	public function uses($name) {
@@ -58,13 +54,21 @@ class PresenterComponent extends Component {
 
 	public function setPresenter($key, $data, $name, $opts = array()) {
 		$class = $this->getPresenterClass($name);
-		$this->set($key, new $class($data, $opts));
+		$this->set($key, $this->newPresenter($class, $data, $opts));
 	}
 
 	public function setEachPresenter($key, $data, $name, $opts = array()) {
 		$class = $this->getPresenterClass($name);
 		$iter = new PresenterListIterator($data, $class, $opts);
 		$this->set($key, $iter);
+	}
+
+	private function newPresenter($class, $data, $options) {
+		if (!$class) {
+			$str = "Could not find presenter. Create $class in APP/Presenter/$class.php";
+			throw new LogicException($str);
+		}
+		return new $class($data, $options);
 	}
 
 	private function getPresenterClass($name = null) {
