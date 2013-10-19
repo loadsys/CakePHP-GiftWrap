@@ -95,8 +95,8 @@ class PresenterComponentTest extends CakeTestCase {
 		$data = array(array('first' => 1), array('second' => 2));
 		$this->Presenter->setEachPresenter('list', $data, 'PresenterTestName');
 		$presenter = $this->Presenter->create();
-		$this->assertEquals(array('first' => 1), $presenter->list[0]->content);
-		$this->assertEquals(array('second' => 2), $presenter->list[1]->content);
+		$this->assertEquals(array('first' => 1), $presenter->list[0]->model);
+		$this->assertEquals(array('second' => 2), $presenter->list[1]->model);
 	}
 
 	public function testCreatedPresenterHasTheControllerForAccessToView() {

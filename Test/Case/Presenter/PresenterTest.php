@@ -15,14 +15,14 @@ class PresenterTest extends CakeTestCase {
 
 	public function testPresenterCanBeGivenANonArrayAndItWillBeSetToDefaultContent() {
 		$presenter = new Presenter('something');
-		$this->assertEquals('something', $presenter->content);
+		$this->assertEquals('something', $presenter->model);
 	}
 
 	public function testPresenterSetContentSetsTheDefaultContentForPresenter() {
-		$presenter = new Presenter(array('one' => 1), array('content' => 'model'));
-		$presenter->setContent(array('seven' => 7));
+		$presenter = new Presenter(array('one' => 1), array('contextKey' => 'content'));
+		$presenter->setContext(array('seven' => 7));
 		$this->assertEquals(1, $presenter->one);
-		$this->assertEquals(array('seven' => 7), $presenter->model);
+		$this->assertEquals(array('seven' => 7), $presenter->content);
 		$this->assertEquals(7, $presenter['seven']);
 	}
 
@@ -43,14 +43,14 @@ class PresenterTest extends CakeTestCase {
 	}
 
 	public function testPresenterProxiesArrayAccessGetToContentWhenPropertyMissing() {
-		$presenter = new Presenter(array('content' => array('one' => 1), 'two' => 2));
+		$presenter = new Presenter(array('model' => array('one' => 1), 'two' => 2));
 		$this->assertEquals(1, $presenter['one']);
 		$this->assertEquals(2, $presenter['two']);
 	}
 
 	public function testPresenterCanHaveProxyPropertyConfigured() {
 		$data = array('proxy' => array('three' => 3), 'four' => 4);
-		$presenter = new Presenter($data, array('content' => 'proxy'));
+		$presenter = new Presenter($data, array('contextKey' => 'proxy'));
 		$this->assertEquals(3, $presenter['three']);
 		$this->assertEquals(4, $presenter['four']);
 	}

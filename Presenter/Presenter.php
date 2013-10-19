@@ -2,7 +2,7 @@
 
 class Presenter implements arrayaccess {
 	protected $_options = array();
-	protected $_defaults = array('content' => 'content');
+	protected $_defaults = array('contextKey' => 'model');
 	protected $_controller = null;
 
 	public function __construct($data = array(), $options = array(), $controller = null) {
@@ -13,12 +13,12 @@ class Presenter implements arrayaccess {
 				$this->{$key} = $value;
 			}
 		} else {
-			$this->{$this->_options['content']} = $data;
+			$this->{$this->_options['contextKey']} = $data;
 		}
 	}
 
-	public function setContent($value) {
-		$this->{$this->_options['content']} = $value;
+	public function setContext($value) {
+		$this->{$this->_options['contextKey']} = $value;
 	}
 
 	public function offsetSet($offset, $value) {
@@ -29,10 +29,10 @@ class Presenter implements arrayaccess {
 		if (property_exists($this, $offset)) {
 			$value = $this->{$offset};
 		} else if (
-			is_array($this->{$this->_options['content']}) &&
-			array_key_exists($offset, $this->{$this->_options['content']})
+			is_array($this->{$this->_options['contextKey']}) &&
+			array_key_exists($offset, $this->{$this->_options['contextKey']})
 		) {
-			$value = $this->{$this->_options['content']}[$offset];
+			$value = $this->{$this->_options['contextKey']}[$offset];
 		} else {
 			trigger_error("Undefined index '$offset'");
 		}

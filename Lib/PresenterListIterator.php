@@ -30,7 +30,7 @@ class PresenterListIterator extends ArrayIterator {
 
 	protected function wrap($value) {
 		$presenter = new $this->_class(array(), $this->_options);
-		$presenter->setContent($value);
+		$presenter->setContext($value);
 		return $presenter;
 	}
 }

@@ -7,9 +7,9 @@ class PresenterListIteratorTest extends CakeTestCase {
 	public function testWrapsEachItemInArrayInAPresenter() {
 		$data = array('one', 'two', 'three');
 		$list = new PresenterListIterator($data, 'Presenter');
-		$this->assertEquals('one', $list[0]->content);
-		$this->assertEquals('two', $list[1]->content);
-		$this->assertEquals('three', $list[2]->content);
+		$this->assertEquals('one', $list[0]->model);
+		$this->assertEquals('two', $list[1]->model);
+		$this->assertEquals('three', $list[2]->model);
 	}
 
 	public function testPresenterObjectsAreCachedForReuse() {
