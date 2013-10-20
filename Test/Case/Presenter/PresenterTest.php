@@ -21,6 +21,11 @@ class PresenterTest extends CakeTestCase {
 		$this->assertEquals('TWO', $presenter->two);
 	}
 
+	public function testPresenterOnlyAssignsNonNumericKeys() {
+		$presenter = new Presenter(array('first' => 1, 'second'));
+		$this->assertEquals(1, $presenter->first);
+	}
+
 	public function testPresenterCanBeGivenANonArrayAndItWillBeSetToDefaultContent() {
 		$presenter = new Presenter('something');
 		$this->assertEquals('something', $presenter->model);

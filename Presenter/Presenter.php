@@ -14,8 +14,8 @@ class Presenter implements arrayaccess {
 		if (!is_array($data)) {
 			$data = array($this->_options['contextKey'] => $data);
 		}
-		$this->setProperties($this->defaultProperties);
-		$this->setProperties($data);
+		$this->setLocalProperties($this->defaultProperties);
+		$this->setLocalProperties($data);
 		$this->checkRequiredProperties($this->requireProperties, $data);
 	}
 
@@ -61,12 +61,14 @@ class Presenter implements arrayaccess {
 		}
 	}
 
-	protected function setProperties($data = array()) {
+	protected function setLocalProperties($data = array()) {
 		if (!is_array($data)) {
 			return;
 		}
 		foreach ($data as $key => $value) {
-			$this->{$key} = $value;
+			if (!is_numeric($key)) {
+				$this->{$key} = $value;
+			}
 		}
 	}
 
