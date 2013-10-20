@@ -7,7 +7,11 @@ class TestView {
 }
 
 class RequiredPresenter extends Presenter {
-	public $requiredProperties = array('one', 'two');
+	public $requireProperties = array('one', 'two');
+}
+
+class DefaultPresenter extends Presenter {
+	public $defaultProperties = array('eight' => 'EIGHT', 'nine' => 9);
 }
 
 class PresenterTest extends CakeTestCase {
@@ -88,5 +92,11 @@ class PresenterTest extends CakeTestCase {
 	public function testPresenterDoesNotErrorWhenGivenMoreThanRequiredProps() {
 		$presenter = new RequiredPresenter(array('one' => 1, 'two' => 2, 'three' => 3));
 		$this->assertTrue(true, 'Exception not thrown for requiredProperties');
+	}
+
+	public function testPresenterCanDefineDefaultKeysAndProperties() {
+		$presenter = new DefaultPresenter(array('eight' => 8));
+		$this->assertEquals(8, $presenter->eight);
+		$this->assertEquals(9, $presenter->nine);
 	}
 }

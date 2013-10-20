@@ -1,7 +1,8 @@
 <?php
 
 class Presenter implements arrayaccess {
-	public $requiredProperties = array();
+	public $defaultProperties = array();
+	public $requireProperties = array();
 
 	protected $_options = array();
 	protected $_defaults = array('contextKey' => 'model');
@@ -13,10 +14,9 @@ class Presenter implements arrayaccess {
 		if (!is_array($data)) {
 			$data = array($this->_options['contextKey'] => $data);
 		}
-		foreach ($data as $key => $value) {
-			$this->{$key} = $value;
-		}
-		$this->checkRequiredProperties($this->requiredProperties, $data);
+		$this->setProperties($this->defaultProperties);
+		$this->setProperties($data);
+		$this->checkRequiredProperties($this->requireProperties, $data);
 	}
 
 	public function setContext($value) {
@@ -58,6 +58,15 @@ class Presenter implements arrayaccess {
 	public function __call($method, $args = array()) {
 		if ($this->_controller && $this->_controller->View) {
 			return call_user_func_array(array($this->_controller->View, $method), $args);
+		}
+	}
+
+	protected function setProperties($data = array()) {
+		if (!is_array($data)) {
+			return;
+		}
+		foreach ($data as $key => $value) {
+			$this->{$key} = $value;
 		}
 	}
 
