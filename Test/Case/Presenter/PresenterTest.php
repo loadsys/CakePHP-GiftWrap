@@ -94,6 +94,13 @@ class PresenterTest extends CakeTestCase {
 		$this->assertTrue(false, 'Exception not thrown for requiredProperties');
 	}
 
+	public function testPresenterCanBeConfiguredToNotCheckRequiredKeys() {
+		$presenter = new RequiredPresenter(array('one' => 1), array(
+			'performRequireCheck' => false
+		));
+		$this->assertTrue(true, 'Exception not thrown for requiredProperties');
+	}
+
 	public function testPresenterDoesNotErrorWhenGivenMoreThanRequiredProps() {
 		$presenter = new RequiredPresenter(array('one' => 1, 'two' => 2, 'three' => 3));
 		$this->assertTrue(true, 'Exception not thrown for requiredProperties');
