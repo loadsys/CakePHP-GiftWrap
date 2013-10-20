@@ -85,9 +85,11 @@ class PresenterComponentTest extends CakeTestCase {
 	}
 
 	public function testCanSetPropertyThatIsWrappedAsAPresenter() {
+		$context = 'context';
 		$data = array('second' => 'second');
-		$this->Presenter->setPresenter('test', $data, 'PresenterTestName');
+		$this->Presenter->setPresenter('test', $context, 'PresenterTestName', $data);
 		$presenter = $this->Presenter->create();
+		$this->assertEquals('context', $presenter->test->model);
 		$this->assertEquals('second', $presenter->test->second);
 	}
 

@@ -52,14 +52,18 @@ class PresenterComponent extends Component {
 		}
 	}
 
-	public function setPresenter($key, $data, $name, $opts = array()) {
+	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
 		$class = $this->getPresenterClass($name);
-		$this->set($key, $this->newPresenter($class, $data, $opts));
+		$options = array('checkRequiredProperties' => false) + $opts;
+		$presenter = $this->newPresenter($class, $data, $options);
+		$presenter->setContext($context);
+		$presenter->checkRequiredProperties();
+		$this->set($key, $presenter);
 	}
 
-	public function setEachPresenter($key, $data, $name, $opts = array()) {
+	public function setEachPresenter($key, $context, $name, $data = array(), $opts = array()) {
 		$class = $this->getPresenterClass($name);
-		$iter = new PresenterListIterator($data, $class, $opts);
+		$iter = new PresenterListIterator($context, $class, $data, $opts);
 		$this->set($key, $iter);
 	}
 
