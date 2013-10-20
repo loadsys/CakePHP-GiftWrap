@@ -2,12 +2,14 @@
 
 class PresenterListIterator extends ArrayIterator {
 	protected $_class;
+	protected $_extra = array();
 	protected $_options;
 	protected $_cache = array();
 
-	public function __construct($array, $class, $options = array()) {
+	public function __construct($array, $class, $extra = array(), $options = array()) {
 		parent::__construct($array);
 		$this->_class = $class;
+		$this->_extra = $extra;
 		$this->_options = $options;
 	}
 
@@ -29,8 +31,10 @@ class PresenterListIterator extends ArrayIterator {
 	}
 
 	protected function wrap($value) {
-		$presenter = new $this->_class(array(), $this->_options);
+		$options = array('performRequireCheck' => false) + $this->_options;
+		$presenter = new $this->_class($this->_extra, $options);
 		$presenter->setContext($value);
+		$presenter->checkRequireProperties();
 		return $presenter;
 	}
 }
