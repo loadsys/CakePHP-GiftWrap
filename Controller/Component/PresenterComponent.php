@@ -64,18 +64,13 @@ class PresenterComponent extends Component {
 	}
 
 	protected function newPresenter($class, $data, $options) {
-		if (!$class) {
-			$str = "Could not find presenter. Create $class in APP/Presenter/$class.php";
-			throw new LogicException($str);
-		}
 		return new $class($data, $options, $this->_controller);
 	}
 
 	protected function getPresenterClass($name = null) {
 		$attempts = $this->getClassAttemptNames($name);
 		$presenter = false;
-		while (!empty($attempts)) {
-			$class = array_shift($attempts);
+		foreach ($attempts as $class) {
 			if (!class_exists($class)) {
 				App::uses($class, 'Presenter');
 			}
@@ -83,6 +78,12 @@ class PresenterComponent extends Component {
 				$presenter = $class;
 				break;
 			}
+		}
+		if (!$presenter) {
+			$class = array_pop($attempts);
+			throw new LogicException(
+				"Could not find presenter. Create $class in APP/Presenter/$class.php"
+			);
 		}
 		return $presenter;
 	}

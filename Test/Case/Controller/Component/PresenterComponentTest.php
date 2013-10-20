@@ -109,4 +109,15 @@ class PresenterComponentTest extends CakeTestCase {
 		$presenter = $this->Presenter->create();
 		$this->assertEquals('Form Helper', $presenter->Form);
 	}
+
+	public function testSettingPresenterClassToUseThatDoesNotExistThrowsError() {
+		try {
+			$this->Presenter->uses('NotRealPresenter');
+			$presenter = $this->Presenter->create();
+		} catch (Exception $e) {
+			$this->assertRegExp('/Create NotRealPresenter/', $e->getMessage());
+			return;
+		}
+		$this->assertTrue(false, 'Creating missing presenter did not throw error');
+	}
 }
