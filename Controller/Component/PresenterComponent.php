@@ -8,12 +8,14 @@ class PresenterComponent extends Component {
 	protected $_controller;
 	protected $_viewVar = 'presenter';
 	protected $_uses = null;
+	protected $_defaultClass = 'Presenter';
 	protected $_data = array();
 	protected $_options = array();
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
-		foreach (array('viewVar', 'options') as $key) {
+		$this->findDefaultClass();
+		foreach (array('viewVar', 'options', 'defaultClass') as $key) {
 			if (array_key_exists($key, $settings)) {
 				$var = '_'.$key;
 				$this->{$var} = $settings[$key];
@@ -42,6 +44,10 @@ class PresenterComponent extends Component {
 
 	public function viewVar($name) {
 		$this->_viewVar = $name;
+	}
+
+	public function defaultClass($name) {
+		$this->_defaultClass = $name;
 	}
 
 	public function set($key, $value = null) {
@@ -101,10 +107,18 @@ class PresenterComponent extends Component {
 			$attempts = array(
 				$this->controllerActionName(),
 				$this->controllerName(),
-				'Presenter'
+				$this->_defaultClass
 			);
 		}
 		return $attempts;
+	}
+
+	protected function findDefaultClass() {
+		$name = 'AppPresenter';
+		App::uses($name, 'Presenter');
+		if (class_exists($name)) {
+			$this->_defaultClass = $name;
+		}
 	}
 
 	protected function convertName($name) {
