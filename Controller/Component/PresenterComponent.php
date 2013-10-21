@@ -29,13 +29,17 @@ class PresenterComponent extends Component {
 
 	public function beforeRender(Controller $controller) {
 		if (!isset($this->_controller->viewVars[$this->_viewVar])) {
-			$this->_controller->set($this->_viewVar, $this->create());
+			$this->_controller->set($this->_viewVar, $this->getDefaultPresenter());
 		}
 	}
 
-	public function create($name = null) {
+	public function getDefaultPresenter($name = null) {
 		$class = $this->getPresenterClass($name);
 		return $this->newPresenter($class, $this->_data, $this->_options);
+	}
+
+	public function create($class, $data = array(), $options = array()) {
+		return $this->newPresenter($this->convertName($class), $data, $options);
 	}
 
 	public function uses($name) {
