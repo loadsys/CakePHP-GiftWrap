@@ -54,6 +54,10 @@ class PresenterComponent extends Component {
 		$this->_defaultClass = $name;
 	}
 
+	public function options($options = array()) {
+		$this->_options = $options;
+	}
+
 	public function set($key, $value = null) {
 		if (is_array($key)) {
 			$this->_data = $key + $this->_data;
