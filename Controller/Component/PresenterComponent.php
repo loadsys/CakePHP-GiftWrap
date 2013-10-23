@@ -2,6 +2,7 @@
 
 App::uses('Component', 'Controller');
 App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+App::uses('PresenterNaming', 'CakePHP-GiftWrap.Lib');
 App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
 
 class PresenterComponent extends Component {
@@ -14,7 +15,9 @@ class PresenterComponent extends Component {
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
-		$this->findDefaultClass();
+		$name = 'AppPresenter';
+		App::uses($name, 'Presenter');
+		if (class_exists($name)) { $this->_defaultClass = $name; }
 		foreach (array('viewVar', 'options', 'defaultClass') as $key) {
 			if (array_key_exists($key, $settings)) {
 				$var = '_'.$key;
@@ -35,15 +38,16 @@ class PresenterComponent extends Component {
 
 	public function getDefaultPresenter($name = null) {
 		$class = $this->getPresenterClass($name);
-		return $this->newPresenter($class, $this->_data, $this->_options);
+		return $this->create($class, $this->_data, $this->_options);
 	}
 
-	public function create($class, $data = array(), $options = array()) {
-		return $this->newPresenter($this->convertName($class), $data, $options);
+	public function create($name, $data = array(), $options = array()) {
+		$class = PresenterNaming::classify($name);
+		return new $class($data, $options, $this->_controller);
 	}
 
 	public function uses($name) {
-		$this->_uses = $this->convertName($name);
+		$this->_uses = $name;
 	}
 
 	public function viewVar($name) {
@@ -69,7 +73,7 @@ class PresenterComponent extends Component {
 	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
 		$class = $this->getPresenterClass($name);
 		$options = array('checkRequiredProperties' => false) + $opts;
-		$presenter = $this->newPresenter($class, $data, $options);
+		$presenter = $this->create($class, $data, $options);
 		$presenter->setContext($context);
 		$presenter->checkRequiredProperties();
 		$this->set($key, $presenter);
@@ -81,65 +85,9 @@ class PresenterComponent extends Component {
 		$this->set($key, $iter);
 	}
 
-	protected function newPresenter($class, $data, $options) {
-		return new $class($data, $options, $this->_controller);
-	}
-
 	protected function getPresenterClass($name = null) {
-		$attempts = $this->getClassAttemptNames($name);
-		$presenter = false;
-		foreach ($attempts as $class) {
-			if (!class_exists($class)) {
-				App::uses($class, 'Presenter');
-			}
-			if (class_exists($class)) {
-				$presenter = $class;
-				break;
-			}
-		}
-		if (!$presenter) {
-			$class = array_pop($attempts);
-			throw new LogicException(
-				"Could not find presenter. Create $class in APP/Presenter/$class.php"
-			);
-		}
-		return $presenter;
-	}
-
-	protected function getClassAttemptNames($name) {
-		if (is_string($name)) {
-			$attempts = array($this->convertName($name));
-		} else if (is_string($this->_uses)) {
-			$attempts = array($this->convertName($this->_uses));
-		} else {
-			$attempts = array(
-				$this->controllerActionName(),
-				$this->controllerName(),
-				$this->_defaultClass
-			);
-		}
-		return $attempts;
-	}
-
-	protected function findDefaultClass() {
-		$name = 'AppPresenter';
-		App::uses($name, 'Presenter');
-		if (class_exists($name)) {
-			$this->_defaultClass = $name;
-		}
-	}
-
-	protected function convertName($name) {
-		$camel = Inflector::camelize($name);
-		return preg_replace('/Presenter$/', '', $camel).'Presenter';
-	}
-
-	protected function controllerActionName() {
-		$name = $this->_controller->name . '_' . $this->_controller->action;
-		return $this->convertName($name);
-	}
-
-	protected function controllerName() {
-		return $this->convertName($this->_controller->name);
+		$names = new PresenterNaming($this->_controller, $this->_defaultClass);
+		$name = $name ? $name : $this->_uses;
+		return $names->getClass($name);
 	}
 }
