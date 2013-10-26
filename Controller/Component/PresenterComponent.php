@@ -37,12 +37,11 @@ class PresenterComponent extends Component {
 	}
 
 	public function getDefaultPresenter($name = null) {
-		$class = $this->getPresenterClass($name);
-		return $this->create($class, $this->_data, $this->_options);
+		return $this->create($name, $this->_data, $this->_options);
 	}
 
 	public function create($name, $data = array(), $options = array()) {
-		$class = PresenterNaming::classify($name);
+		$class = $this->getPresenterClass($name);
 		return new $class($data, $options, $this->_controller);
 	}
 
@@ -71,9 +70,8 @@ class PresenterComponent extends Component {
 	}
 
 	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
-		$class = $this->getPresenterClass($name);
 		$options = array('checkRequiredProperties' => false) + $opts;
-		$presenter = $this->create($class, $data, $options);
+		$presenter = $this->create($name, $data, $options);
 		$presenter->setContext($context);
 		$presenter->checkRequiredProperties();
 		$this->set($key, $presenter);
