@@ -70,10 +70,8 @@ class PresenterComponent extends Component {
 	}
 
 	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
-		$options = array('checkRequiredProperties' => false) + $opts;
-		$presenter = $this->create($name, $data, $options);
+		$presenter = $this->create($name, $data, $opts);
 		$presenter->setContext($context);
-		$presenter->checkRequiredProperties();
 		$this->set($key, $presenter);
 	}
 

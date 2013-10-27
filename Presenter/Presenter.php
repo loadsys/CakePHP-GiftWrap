@@ -2,13 +2,11 @@
 
 class Presenter implements arrayaccess {
 	public $defaultProperties = array();
-	public $requireProperties = array();
 
 	protected $_options = array();
 	protected $_setData = array();
 	protected $_defaults = array(
-		'contextKey' => 'model',
-		'performRequireCheck' => true
+		'contextKey' => 'model'
 	);
 	protected $_controller = null;
 
@@ -20,27 +18,11 @@ class Presenter implements arrayaccess {
 		}
 		$this->setLocalProperties($this->defaultProperties);
 		$this->setLocalProperties($data);
-		if ($this->_options['performRequireCheck']) {
-			$this->checkRequireProperties();
-		}
 	}
 
 	public function setContext($value) {
 		$this->_setData[$this->_options['contextKey']] = $value;
 		$this->{$this->_options['contextKey']} = $value;
-	}
-
-	public function checkRequireProperties() {
-		$data = $this->_setData;
-		$required = $this->requireProperties;
-		if (is_array($required) && !empty($required)) {
-			$diff = array_diff($required, array_keys($data));
-			if (!empty($diff)) {
-				$class = get_class($this);
-				$missing = join(', ', $diff);
-				throw new LogicException($class . ' missing properties: ' . $missing);
-			}
-		}
 	}
 
 	public function offsetSet($offset, $value) {

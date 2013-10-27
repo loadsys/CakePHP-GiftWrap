@@ -23,29 +23,4 @@ class PresenterListIteratorTest extends CakeTestCase {
 		$one->key = 'value';
 		$this->assertEquals('value', $list[0]->key);
 	}
-
-	public function testPresenterSkipsRequireCheckUntilAfterContextIsSet() {
-		try {
-			$extra = array('one' => 'one');
-			$data = array('context');
-			$list = new PresenterListIterator($data, 'IteratorRequiredPresenter', $extra);
-			$list[0]; // Must access property to make iterator create the presenter
-		} catch (Exception $e) {
-			$this->assertTrue(false, 'The created presenter threw a required property exception');
-		}
-		$this->assertEquals('context', $list[0]->model);
-	}
-
-	public function testPresenterStillFailsOnRequireCheckAfterContextIsSet() {
-		try {
-			$extra = array();
-			$data = array('context');
-			$list = new PresenterListIterator($data, 'IteratorRequiredPresenter', $extra);
-			$list[0]; // Must access property to make iterator create the presenter
-		} catch (Exception $e) {
-			$this->assertRegExp('/: one/', $e->getMessage());
-			return;
-		}
-		$this->assertTrue(false, 'The created presenter did not throw a required property exception');
-	}
 }

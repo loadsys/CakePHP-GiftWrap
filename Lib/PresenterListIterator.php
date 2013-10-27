@@ -39,10 +39,9 @@ class PresenterListIterator extends ArrayIterator {
 	}
 
 	protected function wrap($value) {
-		$options = array('performRequireCheck' => false) + $this->_options;
+		$options = $this->_options;
 		$presenter = new $this->_class($this->_extra, $options, $this->_controller);
 		$presenter->setContext($value);
-		$presenter->checkRequireProperties();
 		return $presenter;
 	}
 }
