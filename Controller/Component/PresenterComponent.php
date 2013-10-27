@@ -12,6 +12,7 @@ class PresenterComponent extends Component {
 	protected $_defaultClass = 'Presenter';
 	protected $_data = array();
 	protected $_options = array();
+	protected $_defaultPresenter = null;
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
@@ -37,7 +38,7 @@ class PresenterComponent extends Component {
 	}
 
 	public function getDefaultPresenter($name = null) {
-		return $this->create($name, $this->_data, $this->_options);
+		return $this->_defaultPresenter = $this->create($name, $this->_data, $this->_options);
 	}
 
 	public function create($name, $data = array(), $options = array()) {
@@ -47,6 +48,9 @@ class PresenterComponent extends Component {
 
 	public function uses($name) {
 		$this->_uses = $name;
+		if ($this->_defaultPresenter) {
+			$this->getDefaultPresenter();
+		}
 	}
 
 	public function viewVar($name) {
@@ -67,6 +71,7 @@ class PresenterComponent extends Component {
 		} else {
 			$this->_data[$key] = $value;
 		}
+		$this->setToDefaultPresenter($key, $value);
 	}
 
 	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
@@ -85,5 +90,18 @@ class PresenterComponent extends Component {
 		$names = new PresenterNaming($this->_controller, $this->_defaultClass);
 		$name = $name ? $name : $this->_uses;
 		return $names->getClass($name);
+	}
+
+	protected function setToDefaultPresenter($key, $value = null) {
+		if (!is_array($key)) {
+			$data = array($key => $value);
+		} else {
+			$data = $key;
+		}
+		foreach ($data as $k => $v) {
+			if ($this->_defaultPresenter) {
+				$this->_defaultPresenter->{$key} = $value;
+			}
+		}
 	}
 }
