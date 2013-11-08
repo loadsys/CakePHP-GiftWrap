@@ -13,10 +13,11 @@ class PresenterComponent extends Component {
 	protected $_data = array();
 	protected $_options = array();
 	protected $_defaultPresenter = null;
+	protected $_baseLookupName = 'AppPresenter';
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
-		$name = 'AppPresenter';
+		$name = $this->_baseLookupName;
 		App::uses($name, 'Presenter');
 		if (class_exists($name)) { $this->_defaultClass = $name; }
 		foreach (array('viewVar', 'options', 'defaultClass') as $key) {
