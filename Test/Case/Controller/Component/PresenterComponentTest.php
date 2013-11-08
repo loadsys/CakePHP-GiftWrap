@@ -90,21 +90,36 @@ class PresenterComponentTest extends CakeTestCase {
 		$this->assertEquals(3, $presenter->three);
 	}
 
-	public function testCanSetPropertyThatIsWrappedAsAPresenter() {
+	public function testCanSetPropertyThatIsWrappedAsADecorator() {
 		$context = 'context';
 		$data = array('second' => 'second');
-		$this->Presenter->setPresenter('test', $context, 'PresenterTestName', $data);
+		$this->Presenter->setDecorator('test', 'PresenterTestName', $context, $data);
 		$presenter = $this->Presenter->getDefaultPresenter();
 		$this->assertEquals('context', $presenter->test->model);
 		$this->assertEquals('second', $presenter->test->second);
 	}
 
-	public function testCanSetPresenterForEachElementInASuppliedArray() {
+	public function testCanSetDecoratorForEachElementInASuppliedArray() {
 		$data = array(array('first' => 1), array('second' => 2));
-		$this->Presenter->setEachPresenter('list', $data, 'PresenterTestName');
+		$this->Presenter->setEachDecorator('list', 'PresenterTestName', $data);
 		$presenter = $this->Presenter->getDefaultPresenter();
 		$this->assertEquals(array('first' => 1), $presenter->list[0]->model);
 		$this->assertEquals(array('second' => 2), $presenter->list[1]->model);
+	}
+
+	public function testCanSetPropertyThatIsWrappedAsAPresenter() {
+		$data = array('second' => 'second');
+		$this->Presenter->setPresenter('test', 'PresenterTestName', $data);
+		$presenter = $this->Presenter->getDefaultPresenter();
+		$this->assertEquals('second', $presenter->test->second);
+	}
+
+	public function testCanSetPresenterForEachElementInASuppliedArray() {
+		$data = array(array('first' => 1), array('second' => 2));
+		$this->Presenter->setEachPresenter('list', 'PresenterTestName', $data);
+		$presenter = $this->Presenter->getDefaultPresenter();
+		$this->assertEquals(1, $presenter->list[0]->first);
+		$this->assertEquals(2, $presenter->list[1]->second);
 	}
 
 	public function testCreatedPresenterHasTheControllerForAccessToView() {

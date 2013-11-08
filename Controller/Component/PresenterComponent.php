@@ -4,6 +4,7 @@ App::uses('Component', 'Controller');
 App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
 App::uses('PresenterNaming', 'CakePHP-GiftWrap.Lib');
 App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
+App::uses('DecoratorListIterator', 'CakePHP-GiftWrap.Lib');
 
 class PresenterComponent extends Component {
 	protected $_controller;
@@ -17,15 +18,8 @@ class PresenterComponent extends Component {
 
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
-		$name = $this->_baseLookupName;
-		App::uses($name, 'Presenter');
-		if (class_exists($name)) { $this->_defaultClass = $name; }
-		foreach (array('viewVar', 'options', 'defaultClass') as $key) {
-			if (array_key_exists($key, $settings)) {
-				$var = '_'.$key;
-				$this->{$var} = $settings[$key];
-			}
-		}
+		$this->setDefaultPresenterClass();
+		$this->setOptions($settings);
 	}
 
 	public function startup(Controller $controller) {
@@ -72,15 +66,26 @@ class PresenterComponent extends Component {
 		$this->setToDefaultPresenter($data);
 	}
 
-	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
-		$presenter = $this->create($name, $data, $opts);
+	public function setPresenter($key, $class, $data = array(), $opts = array()) {
+		$presenter = $this->create($class, $data, $opts);
+		$this->set($key, $presenter);
+	}
+
+	public function setEachPresenter($key, $class, $data = array(), $opts = array()) {
+		$class = $this->getPresenterClass($class);
+		$iter = new PresenterListIterator($data, $class, $opts);
+		$this->set($key, $iter);
+	}
+
+	public function setDecorator($key, $class, $context = array(),  $data = array(), $opts = array()) {
+		$presenter = $this->create($class, $data, $opts);
 		$presenter->setContext($context);
 		$this->set($key, $presenter);
 	}
 
-	public function setEachPresenter($key, $context, $name, $data = array(), $opts = array()) {
-		$class = $this->getPresenterClass($name);
-		$iter = new PresenterListIterator($context, $class, $data, $opts);
+	public function setEachDecorator($key, $class, $contexts = array(), $data = array(), $opts = array()) {
+		$class = $this->getPresenterClass($class);
+		$iter = new DecoratorListIterator($contexts, $class, $data, $opts);
 		$this->set($key, $iter);
 	}
 
@@ -88,6 +93,22 @@ class PresenterComponent extends Component {
 		$names = new PresenterNaming($this->_controller, $this->_defaultClass);
 		$name = $name ? $name : $this->_uses;
 		return $names->getClass($name);
+	}
+
+	protected function setOptions($settings = array()) {
+		foreach (array('viewVar', 'options', 'defaultClass') as $key) {
+			if (array_key_exists($key, $settings)) {
+				$var = '_'.$key;
+				$this->{$var} = $settings[$key];
+			}
+		}
+	}
+
+	protected function setDefaultPresenterClass() {
+		App::uses($this->_baseLookupName, 'Presenter');
+		if (class_exists($this->_baseLookupName)) {
+			$this->_defaultClass = $this->_baseLookupName;
+		}
 	}
 
 	protected function setToDefaultPresenter($data = array()) {
