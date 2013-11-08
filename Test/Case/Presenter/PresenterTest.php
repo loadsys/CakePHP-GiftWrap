@@ -67,6 +67,19 @@ class PresenterTest extends CakeTestCase {
 		$this->assertEquals('view method', $presenter->viewMethod());
 	}
 
+	public function testPresenterWarnsThatMethodDoesNotExistOnPresenterWhenNotPresentInView() {
+		$mock = $this->getMock('stdClass');
+		$mock->View = new TestView;
+		$presenter = new Presenter(array(), array(), $mock);
+		try {
+			$presenter->undefinedMethod();
+		} catch (Exception $e) {
+			$this->assertRegExp('/undefined method Presenter::undefinedMethod/', $e->getMessage());
+			return;
+		}
+		$this->assertTrue(false, 'Missing method error not thrown');
+	}
+
 	public function testPresenterLooksForPropertyInViewHelpersIfNotDefined() {
 		$mock = $this->getMock('stdClass');
 		$mock->View = new TestView;
@@ -74,5 +87,19 @@ class PresenterTest extends CakeTestCase {
 		$mock->View->Helpers->Html = 'Html Helper';
 		$presenter = new Presenter(array(), array(), $mock);
 		$this->assertEquals('Html Helper', $presenter->Html);
+	}
+
+	public function testPresenterWarnsThatPropertyDoesNotExistOnPresenterWhenNotPresentInView() {
+		$mock = $this->getMock('stdClass');
+		$mock->View = new TestView;
+		$mock->View->Helpers = new stdClass;
+		$presenter = new Presenter(array(), array(), $mock);
+		try {
+			$presenter->Form;
+		} catch (Exception $e) {
+			$this->assertRegExp('/Undefined property: Presenter::\$Form/', $e->getMessage());
+			return;
+		}
+		$this->assertTrue(false, 'Missing method error not thrown');
 	}
 }

@@ -50,13 +50,23 @@ class Presenter implements arrayaccess {
 
 	public function __get($name) {
 		if ($this->_controller && $this->_controller->View) {
-			return $this->_controller->View->Helpers->{$name};
+			try {
+				$ret = $this->_controller->View->Helpers->{$name};
+			} catch (Exception $e) {
+				trigger_error('Undefined property: '.get_class($this).'::$'.$name);
+			}
+			return $ret;
 		}
 	}
 
 	public function __call($method, $args = array()) {
 		if ($this->_controller && $this->_controller->View) {
-			return call_user_func_array(array($this->_controller->View, $method), $args);
+			try {
+				$ret = call_user_func_array(array($this->_controller->View, $method), $args);
+			} catch (Exception $e) {
+				trigger_error('Call to undefined method ' . get_class($this) . '::' . $method . '()');
+			}
+			return $ret;
 		}
 	}
 
