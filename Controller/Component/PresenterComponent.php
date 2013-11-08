@@ -66,12 +66,9 @@ class PresenterComponent extends Component {
 	}
 
 	public function set($key, $value = null) {
-		if (is_array($key)) {
-			$this->_data = $key + $this->_data;
-		} else {
-			$this->_data[$key] = $value;
-		}
-		$this->setToDefaultPresenter($key, $value);
+		$data = !is_array($key) ? array($key => $value) : $key;
+		$this->_data = $data + $this->_data;
+		$this->setToDefaultPresenter($data);
 	}
 
 	public function setPresenter($key, $context, $name, $data = array(), $opts = array()) {
@@ -92,15 +89,10 @@ class PresenterComponent extends Component {
 		return $names->getClass($name);
 	}
 
-	protected function setToDefaultPresenter($key, $value = null) {
-		if (!is_array($key)) {
-			$data = array($key => $value);
-		} else {
-			$data = $key;
-		}
-		foreach ($data as $k => $v) {
-			if ($this->_defaultPresenter) {
-				$this->_defaultPresenter->{$key} = $value;
+	protected function setToDefaultPresenter($data = array()) {
+		if (isset($this->_controller->viewVars[$this->_viewVar])) {
+			foreach ($data as $k => $v) {
+				$this->_controller->viewVars[$this->_viewVar]->{$key} = $value;
 			}
 		}
 	}
