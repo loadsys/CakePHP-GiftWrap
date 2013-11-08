@@ -1,8 +1,6 @@
 <?php
 
 class Presenter implements arrayaccess {
-	public $defaultProperties = array();
-
 	protected $_options = array();
 	protected $_setData = array();
 	protected $_defaults = array(
@@ -16,7 +14,6 @@ class Presenter implements arrayaccess {
 		if (!is_array($data)) {
 			$data = array($this->_options['contextKey'] => $data);
 		}
-		$this->setLocalProperties($this->defaultProperties);
 		$this->setLocalProperties($data);
 	}
 

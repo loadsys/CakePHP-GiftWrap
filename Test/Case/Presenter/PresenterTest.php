@@ -6,10 +6,6 @@ class TestView {
 	public function viewMethod() { return 'view method'; }
 }
 
-class DefaultPresenter extends Presenter {
-	public $defaultProperties = array('eight' => 'EIGHT', 'nine' => 9);
-}
-
 class PresenterTest extends CakeTestCase {
 	public function testPresenterAssignsKeysInArrayAsProperties() {
 		$presenter = new Presenter(array('one' => 1, 'two' => 'TWO'));
@@ -78,11 +74,5 @@ class PresenterTest extends CakeTestCase {
 		$mock->View->Helpers->Html = 'Html Helper';
 		$presenter = new Presenter(array(), array(), $mock);
 		$this->assertEquals('Html Helper', $presenter->Html);
-	}
-
-	public function testPresenterCanDefineDefaultKeysAndProperties() {
-		$presenter = new DefaultPresenter(array('eight' => 8));
-		$this->assertEquals(8, $presenter->eight);
-		$this->assertEquals(9, $presenter->nine);
 	}
 }
