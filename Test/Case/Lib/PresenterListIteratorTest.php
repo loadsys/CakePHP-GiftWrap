@@ -3,21 +3,17 @@
 App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
 App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
 
-class IteratorRequiredPresenter extends Presenter {
-	public $requireProperties = array('model', 'one');
-}
-
 class PresenterListIteratorTest extends CakeTestCase {
 	public function testWrapsEachItemInArrayInAPresenter() {
-		$data = array('one', 'two', 'three');
+		$data = array(array('one' => 1), array('two' => 2), array('three' => 3));
 		$list = new PresenterListIterator($data, 'Presenter');
-		$this->assertEquals('one', $list[0]->model);
-		$this->assertEquals('two', $list[1]->model);
-		$this->assertEquals('three', $list[2]->model);
+		$this->assertEquals(1, $list[0]->one);
+		$this->assertEquals(2, $list[1]->two);
+		$this->assertEquals(3, $list[2]->three);
 	}
 
 	public function testPresenterObjectsAreCachedForReuse() {
-		$data = array('one');
+		$data = array(array('one' => 1));
 		$list = new PresenterListIterator($data, 'Presenter');
 		$one = $list[0];
 		$one->key = 'value';

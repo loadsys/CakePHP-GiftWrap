@@ -2,21 +2,18 @@
 
 class PresenterListIterator extends ArrayIterator {
 	protected $_class;
-	protected $_extra = array();
-	protected $_options;
+	protected $_options = array();
 	protected $_controller = null;
 	protected $_cache = array();
 
 	public function __construct(
 		$array,
 		$class,
-		$extra = array(),
 		$options = array(),
 		$controller = null
 	) {
 		parent::__construct($array);
 		$this->_class = $class;
-		$this->_extra = $extra;
 		$this->_options = $options;
 		$this->_controller = $controller;
 	}
@@ -39,9 +36,6 @@ class PresenterListIterator extends ArrayIterator {
 	}
 
 	protected function wrap($value) {
-		$options = $this->_options;
-		$presenter = new $this->_class($this->_extra, $options, $this->_controller);
-		$presenter->setContext($value);
-		return $presenter;
+		return new $this->_class($value, $this->_options, $this->_controller);
 	}
 }
