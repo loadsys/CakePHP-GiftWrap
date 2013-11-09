@@ -1,12 +1,34 @@
 <?php
 
-class DecoratorListIterator extends ArrayIterator {
-	protected $_class;
-	protected $_extra = array();
-	protected $_options;
-	protected $_controller = null;
-	protected $_cache = array();
+App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
 
+/**
+ * A specialized PresenterListIterator that assigns the element in each
+ * iteration to the context property on the Presenter instance instead of
+ * passing the data into the constructor.
+ *
+ * @author Joey Trapp <joey@loadsys.com>
+ * @copyright Loadsys Web Strategies 2013
+ * @version 1.0.0
+ */
+class DecoratorListIterator extends PresenterListIterator {
+	/**
+	 * @access protected
+	 * @var Array $_extra
+	 */
+	protected $_extra = array();
+
+	/**
+	 * Creates an iterator using the parent constructor, and saves extra data
+	 * that will be used in creating Presenter instances.
+	 *
+	 * @access public
+	 * @param Array $array
+	 * @param Class $class
+	 * @param Array $extra
+	 * @param Array $options
+	 * @param Object $controller
+	 */
 	public function __construct(
 		$array,
 		$class,
@@ -14,33 +36,17 @@ class DecoratorListIterator extends ArrayIterator {
 		$options = array(),
 		$controller = null
 	) {
-		parent::__construct($array);
-		$this->_class = $class;
+		parent::__construct($array, $class, $options, $controller);
 		$this->_extra = $extra;
-		$this->_options = $options;
-		$this->_controller = $controller;
 	}
 
-	public function current() {
-		return $this->cache($this->key(), parent::current());
-	}
-
-	public function offsetGet($index) {
-		return $this->cache($index, parent::offsetGet($index));
-	}
-
-	protected function cache($index, $value) {
-		if (isset($this->_cache[$index])) {
-			$val = $this->_cache[$index];
-		} else {
-			$val = $this->_cache[$index] = $this->wrap($value);
-		}
-		return $val;
-	}
-
+	/**
+	 * @access protected
+	 * @param Mixed $value
+	 * @return Presenter
+	 */
 	protected function wrap($value) {
-		$options = $this->_options;
-		$presenter = new $this->_class($this->_extra, $options, $this->_controller);
+		$presenter = parent::wrap($this->_extra);
 		$presenter->setContext($value);
 		return $presenter;
 	}
