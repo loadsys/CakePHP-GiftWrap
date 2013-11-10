@@ -59,17 +59,7 @@ class PresenterNaming {
 	 * @return Class
 	 */
 	public function getClass($class = null) {
-		return $this->getPresenterClass($class);
-	}
-
-	/**
-	 * @access protected
-	 * @param Mixed $name
-	 * @throws LogicException
-	 * @return Class
-	 */
-	protected function getPresenterClass($name = null) {
-		$attempts = $this->getClassAttemptNames($name);
+		$attempts = $this->getClassAttemptNames($class);
 		$presenter = $this->findClass($attempts);
 		$this->raiseError($presenter, array_pop($attempts));
 		return $presenter;
