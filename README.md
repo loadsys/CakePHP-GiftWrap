@@ -1,9 +1,11 @@
 # CakePHP-GiftWrap
 
+
 ## Requirements
 
 * CakePHP >= 2.1
 * PHP 5.3+
+
 
 ## Installation
 
@@ -12,69 +14,60 @@ git clone git://github.com:loadsys/CakePHP-GiftWrap.git Plugin/CakePHP-GiftWrap
 echo "CakePlugin::load('CakePHP-GiftWrap', array('bootstrap' => true));" >> Config/bootstrap.php
 ```
 
+
 ## Usage
 
-### Controller usage
 
-Add the component to the list of components in the controller property.
+## API
 
-```
-// Controller/PostsController.php
-class PostsController extends AppController {
-  public $components = array(
-    'CakePHP-GiftWrap.Presenter' => array(
-      'viewVar' => 'object', // Defaults to 'presenter'
-      'options' => array( // Passed the the creation of the default presenter
-        'contextKey' => 'context' // Defaults to 'model'
-      )
-    )
-  );
-  ...
-}
-```
+### Component API
 
-A presenter will be created for in beforeRender automatically. If you don't explicitly set the name of the presenter class to use with `PresenterComponent::uses($name)`, then one will be searched for by some conventional names. First, it looks for a class called `ControllerNameActionNamePresenter` (e.g. `PostsIndexPresenter`). Then, it will look for a class called `ControllerNamePresenter` (e.g. `PostsPresenter`). Finally, if those don't exist, then an instance of the base `Presenter` class is created.
+#### PresenterComponent::uses($className)
 
-In controller actions, you'll set data to the presenter instead of to the view. Since the eventually created presenter will be set to the view for you, you'll have access to all that data in the `$presenter` variable.
+Set the class that will be used for the default presenter.
 
-`PresenterComponent::set()` works the same as `Controller::set()` in that it can take 2 arguments (a key and value), or an array of keys => values.
+#### PresenterComponent::viewVar($varName)
 
-`PresenterComponent::setPresenter()` sets a key that where the value is a presenter wrapping the data given to it.
+Set the name of the variable the defautl presenter will be set into.
 
-`PresenterComponent::setEachPresenter()` sets a key on the presenter where the value is an array of things, and each element of the array will be a presenter instance.
+#### PresenterComponent::defaultClass($className)
 
-`PresenterComponent::uses()` explicitly defines the name of the presenter class to create.
+Set the class that will be used as a fallback if the conventionally named presenter classes don't exist.
 
-```
-public function index() {
-  $posts = $this->Post->find('all');
-  $this->Presenter->set('names', array('Jim', 'Sally', 'Bob'));
-  $this->Presenter->setEachPresenter('posts', $posts, 'PostPresenter');
-}
-public function view($id) {
-  $model = $this->Post->read($id);
-  $user = $this->currentUser();
-  $this->Presenter->uses('PostPresenter');
-  $this->Presenter->setPresenter('user', $user, 'UserPresenter');
-  $this->Presenter->set(compact('model'));
-}
-```
+#### PresenterComponent::options($options)
 
-In the `PresenterComponent::beforeRender()`, the presenter object is created and set to the view in the `$presenter` variable.
+Set the options array that will be passed to the creation of the default presenter.
 
-### Creating a Presenter
+#### PresenterComponent::create($className, $data, $options)
 
-The component will look for presenters in `APP/Presenter`. These classes should inherit from
-`Presenter`:
+Creates a new instance of the supplied presenter class name with the given data and options.
 
-```
-// APP/Presenter/PostPresenter.php
+#### PresenterComponent::set($keyOrArray, $value)
 
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+Set data for the default presenter by either passing a key and value, or an array of key/value pairs.
 
-class PostPresenter extends Presenter {
-}
-```
+#### PresenterComponent::setPresenter($key, $className, $data, $options)
 
-Here you can define view specific logic and use the values set to the presenter.
+Creates an instance of the supplied presenter class name with the data and options and sets it to the key on the default presenter.
 
+#### PresenterComponent::setEachPresenter($key, $className, $array, $options)
+
+Creates an iterator that wraps the supplied array. Each element of the array becomes an instance of the supplied presenter class name, where the data is the current element of the array and the options apply to all instances.
+
+#### PresenterComponent::setDecorator($key, $className, $context, $extra, $options)
+
+Creates an instance of the supplied presenter class name. The `$context` variable is set to the context property of the presenter, and the `$extra` data is used when creating the presenter.
+
+#### PresenterComponent::setEachDecorator($key, $className, $contexts, $extra, $options)
+
+Creates an iterator that wraps the contexts. Each context becomes an instance of the supplied presenter class name. The presenter is created with the data supplied in `$extra`, and the context is set to the context property on the presenter instance.
+
+
+## License
+
+[MIT](https://github.com/loadsys/CakePHP-GiftWrap/blob/master/LICENSE.md)
+
+
+## Copyright
+
+[Loadsys Web Strategies](http://www.loadsys.com) 2013
