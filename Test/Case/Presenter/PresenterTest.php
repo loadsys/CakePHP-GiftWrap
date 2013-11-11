@@ -53,11 +53,27 @@ class PresenterTest extends CakeTestCase {
 		$this->assertEquals(2, $presenter['two']);
 	}
 
+	public function testPresenterProxiesObjectGetAccessToContextWhenPropertyMissing() {
+		$mock = new stdClass();
+		$mock->modelProperty = 'model property';
+		$presenter = new Presenter(array('model' => $mock), array());
+		$this->assertEquals('model property', $presenter->modelProperty);
+	}
+
 	public function testPresenterCanHaveProxyPropertyConfigured() {
 		$data = array('proxy' => array('three' => 3), 'four' => 4);
 		$presenter = new Presenter($data, array('contextKey' => 'proxy'));
 		$this->assertEquals(3, $presenter['three']);
 		$this->assertEquals(4, $presenter['four']);
+	}
+
+	public function testPresenterProxiesUndefinedMethodsToContextIfItIsAnObject() {
+		$mock = $this->getMock('stdClass', array('contextMethod'));
+		$mock->expects($this->once())
+		     ->method('contextMethod')
+		     ->will($this->returnValue('context method'));
+		$presenter = new Presenter(array('model' => $mock), array());
+		$this->assertEquals('context method', $presenter->contextMethod());
 	}
 
 	public function testPresenterProxiesUndefinedMethodsToView() {

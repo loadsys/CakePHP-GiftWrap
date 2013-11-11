@@ -126,10 +126,11 @@ class Presenter implements arrayaccess {
 	}
 
 	/**
-	 * Catchall property access handler. If the controller property was set on
-	 * construction, and that controller has a View property, proxy property
-	 * access to that Views Helper property, so access to view helpers is
-	 * possible.
+	 * Catchall property access handler. If the `contextKey` property is set
+	 * and is an object, get the property from that object first. Then, if
+	 * the controller property was set on construction, and that controller
+	 * has a View property, proxy property access to that Views Helper property,
+	 * so access to view helpers is possible.
 	 *
 	 * @access public
 	 * @param String $property Property attempting to be accessed
@@ -137,14 +138,22 @@ class Presenter implements arrayaccess {
 	 * @return Mixed
 	 */
 	public function __get($property) {
-		if ($this->_controller && $this->_controller->View) {
-			try {
+		try {
+			if (
+				isset($this->{$this->_options['contextKey']}) &&
+				is_object($this->{$this->_options['contextKey']}) &&
+				property_exists($this->{$this->_options['contextKey']}, $property)
+			) {
+				$ret = $this->{$this->_options['contextKey']}->{$property};
+			} elseif ($this->_controller && $this->_controller->View) {
 				$ret = $this->_controller->View->Helpers->{$property};
-			} catch (Exception $e) {
-				trigger_error('Undefined property: '.get_class($this).'::$'.$property);
+			} else {
+				throw new Exception('Undefined property');
 			}
-			return $ret;
+		} catch (Exception $e) {
+			trigger_error('Undefined property: '.get_class($this).'::$'.$property);
 		}
+		return $ret;
 	}
 
 	/**
@@ -157,14 +166,23 @@ class Presenter implements arrayaccess {
 	 * @return Mixed
 	 */
 	public function __call($method, $args = array()) {
-		if ($this->_controller && $this->_controller->View) {
-			try {
-				$ret = call_user_func_array(array($this->_controller->View, $method), $args);
-			} catch (Exception $e) {
-				trigger_error('Call to undefined method '.get_class($this).'::'.$method.'()');
+		try {
+			if (
+				isset($this->{$this->_options['contextKey']}) &&
+				is_object($this->{$this->_options['contextKey']}) &&
+				method_exists($this->{$this->_options['contextKey']}, $method)
+			) {
+				$call = array($this->{$this->_options['contextKey']}, $method);
+			} elseif ($this->_controller && $this->_controller->View) {
+				$call = array($this->_controller->View, $method);
+			} else {
+				throw new Exception('Undefined method');
 			}
-			return $ret;
+			$ret = call_user_func_array($call, $args);
+		} catch (Exception $e) {
+			trigger_error('Call to undefined method '.get_class($this).'::'.$method.'()');
 		}
+		return $ret;
 	}
 
 	/**
