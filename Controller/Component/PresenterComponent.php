@@ -291,7 +291,9 @@ class PresenterComponent extends Component {
 	 * @access protected
 	 */
 	protected function setDefaultPresenterToController() {
-		$this->_controller->set($this->_viewVar, $this->getDefaultPresenter());
+		if ($this->_controller instanceof Controller) {
+			$this->_controller->set($this->_viewVar, $this->getDefaultPresenter());
+		}
 	}
 
 	/**
