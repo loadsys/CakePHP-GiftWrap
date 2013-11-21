@@ -90,7 +90,7 @@ class PresenterTest extends CakeTestCase {
 		try {
 			$presenter->undefinedMethod();
 		} catch (Exception $e) {
-			$this->assertRegExp('/undefined method Presenter::undefinedMethod/', $e->getMessage());
+			$this->assertRegExp('/Call to undefined method: undefinedMethod in/', $e->getMessage());
 			return;
 		}
 		$this->assertTrue(false, 'Missing method error not thrown');
@@ -113,7 +113,7 @@ class PresenterTest extends CakeTestCase {
 		try {
 			$presenter->Form;
 		} catch (Exception $e) {
-			$this->assertRegExp('/Undefined property: Presenter::\$Form/', $e->getMessage());
+			$this->assertRegExp('/Undefined property: Form in/', $e->getMessage());
 			return;
 		}
 		$this->assertTrue(false, 'Missing method error not thrown');

@@ -138,20 +138,26 @@ class Presenter implements arrayaccess {
 	 * @return Mixed
 	 */
 	public function __get($property) {
-		try {
-			if (
-				isset($this->{$this->_options['contextKey']}) &&
-				is_object($this->{$this->_options['contextKey']}) &&
-				property_exists($this->{$this->_options['contextKey']}, $property)
-			) {
-				$ret = $this->{$this->_options['contextKey']}->{$property};
-			} elseif ($this->_controller && $this->_controller->View) {
-				$ret = $this->_controller->View->Helpers->{$property};
-			} else {
-				throw new Exception('Undefined property');
-			}
-		} catch (Exception $e) {
-			trigger_error('Undefined property: '.get_class($this).'::$'.$property);
+		if (
+			isset($this->{$this->_options['contextKey']}) &&
+			is_object($this->{$this->_options['contextKey']}) &&
+			property_exists($this->{$this->_options['contextKey']}, $property)
+		) {
+			$ret = $this->{$this->_options['contextKey']}->{$property};
+		} elseif (
+			$this->_controller &&
+			property_exists($this->_controller, 'View') &&
+			property_exists($this->_controller->View, 'Helpers') &&
+			property_exists($this->_controller->View->Helpers, $property)
+		) {
+			$ret = $this->_controller->View->Helpers->{$property};
+		} else {
+			$trace = debug_backtrace();
+			trigger_error(
+				'Undefined property: ' . $property .
+				' in ' . $trace[0]['file'] .
+				' on line ' . $trace[0]['line'],
+				E_USER_NOTICE);
 		}
 		return $ret;
 	}
@@ -166,23 +172,27 @@ class Presenter implements arrayaccess {
 	 * @return Mixed
 	 */
 	public function __call($method, $args = array()) {
-		try {
-			if (
-				isset($this->{$this->_options['contextKey']}) &&
-				is_object($this->{$this->_options['contextKey']}) &&
-				method_exists($this->{$this->_options['contextKey']}, $method)
-			) {
-				$call = array($this->{$this->_options['contextKey']}, $method);
-			} elseif ($this->_controller && $this->_controller->View) {
-				$call = array($this->_controller->View, $method);
-			} else {
-				throw new Exception('Undefined method');
-			}
-			$ret = call_user_func_array($call, $args);
-		} catch (Exception $e) {
-			trigger_error('Call to undefined method '.get_class($this).'::'.$method.'()');
+		if (
+			isset($this->{$this->_options['contextKey']}) &&
+			is_object($this->{$this->_options['contextKey']}) &&
+			method_exists($this->{$this->_options['contextKey']}, $method)
+		) {
+			$call = array($this->{$this->_options['contextKey']}, $method);
+		} elseif (
+			$this->_controller &&
+			property_exists($this->_controller, 'View') &&
+			method_exists($this->_controller->View, $method)
+		) {
+			$call = array($this->_controller->View, $method);
+		} else {
+			$trace = debug_backtrace();
+			trigger_error(
+				'Call to undefined method: ' . $method .
+				' in ' . $trace[0]['file'] .
+				' on line ' . $trace[0]['line'],
+				E_USER_NOTICE);
 		}
-		return $ret;
+		return call_user_func_array($call, $args);
 	}
 
 	/**
