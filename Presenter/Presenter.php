@@ -138,26 +138,31 @@ class Presenter implements arrayaccess {
 	 * @return Mixed
 	 */
 	public function __get($property) {
-		if (
-			isset($this->{$this->_options['contextKey']}) &&
-			is_object($this->{$this->_options['contextKey']}) &&
-			property_exists($this->{$this->_options['contextKey']}, $property)
-		) {
-			$ret = $this->{$this->_options['contextKey']}->{$property};
-		} elseif (
-			$this->_controller &&
-			property_exists($this->_controller, 'View') &&
-			property_exists($this->_controller->View, 'Helpers') &&
-			property_exists($this->_controller->View->Helpers, $property)
-		) {
-			$ret = $this->_controller->View->Helpers->{$property};
-		} else {
+		$error = true;
+		try {
+			if (
+				isset($this->{$this->_options['contextKey']}) &&
+				is_object($this->{$this->_options['contextKey']}) &&
+				property_exists($this->{$this->_options['contextKey']}, $property)
+			) {
+				$ret = $this->{$this->_options['contextKey']}->{$property};
+				$error = false;
+			} elseif (
+				$this->_controller &&
+				property_exists($this->_controller, 'View') &&
+				property_exists($this->_controller->View, 'Helpers')
+			) {
+					$ret = $this->_controller->View->Helpers->{$property};
+					$error = !$ret;
+			}
+		} catch (MissingHelperException $e) {}
+		if ($error) {
 			$trace = debug_backtrace();
+			$t = $trace[0];
 			trigger_error(
-				'Undefined property: ' . $property .
-				' in ' . $trace[0]['file'] .
-				' on line ' . $trace[0]['line'],
-				E_USER_NOTICE);
+				"Undefined property: {$property} in {$t['file']} on line {$t['line']}",
+				E_USER_NOTICE
+			);
 		}
 		return $ret;
 	}
@@ -186,11 +191,11 @@ class Presenter implements arrayaccess {
 			$call = array($this->_controller->View, $method);
 		} else {
 			$trace = debug_backtrace();
+			$t = $trace[0];
 			trigger_error(
-				'Call to undefined method: ' . $method .
-				' in ' . $trace[0]['file'] .
-				' on line ' . $trace[0]['line'],
-				E_USER_NOTICE);
+				"Call to undefined method: {$method} in {$t['file']} on line {$t['line']}",
+				E_USER_NOTICE
+			);
 		}
 		return call_user_func_array($call, $args);
 	}

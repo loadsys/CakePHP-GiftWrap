@@ -1,6 +1,7 @@
 <?php
 
 App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+App::uses('View', 'View');
 
 class TestView {
 	public function viewMethod() { return 'view method'; }
@@ -98,8 +99,7 @@ class PresenterTest extends CakeTestCase {
 
 	public function testPresenterLooksForPropertyInViewHelpersIfNotDefined() {
 		$mock = $this->getMock('stdClass');
-		$mock->View = new TestView;
-		$mock->View->Helpers = new stdClass;
+		$mock->View = $this->getMock('View');
 		$mock->View->Helpers->Html = 'Html Helper';
 		$presenter = new Presenter(array(), array(), $mock);
 		$this->assertEquals('Html Helper', $presenter->Html);
@@ -107,15 +107,14 @@ class PresenterTest extends CakeTestCase {
 
 	public function testPresenterWarnsThatPropertyDoesNotExistOnPresenterWhenNotPresentInView() {
 		$mock = $this->getMock('stdClass');
-		$mock->View = new TestView;
-		$mock->View->Helpers = new stdClass;
+		$mock->View = $this->getMock('View');
 		$presenter = new Presenter(array(), array(), $mock);
 		try {
-			$presenter->Form;
+			$presenter->Time;
 		} catch (Exception $e) {
-			$this->assertRegExp('/Undefined property: Form in/', $e->getMessage());
+			$this->assertRegExp('/Undefined property: Time in/', $e->getMessage());
 			return;
 		}
-		$this->assertTrue(false, 'Missing method error not thrown');
+		$this->assertTrue(false, 'Missing property error not thrown');
 	}
 }
