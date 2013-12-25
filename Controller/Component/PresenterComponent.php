@@ -336,7 +336,7 @@ class PresenterComponent extends Component {
 	 */
 	protected function setOnExistingPresenter($data = array()) {
 		if (isset($this->_controller->viewVars[$this->_viewVar])) {
-			foreach ($data as $k => $v) {
+			foreach ($data as $key => $value) {
 				$this->_controller->viewVars[$this->_viewVar]->{$key} = $value;
 			}
 		}
