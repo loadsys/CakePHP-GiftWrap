@@ -143,4 +143,13 @@ class PresenterComponentTest extends CakeTestCase {
 		}
 		$this->assertTrue(false, 'Creating missing presenter did not throw error');
 	}
+
+	public function testSettingDataAfterDefaultPresenterIsCreatedSetsProperly() {
+		$this->Presenter->set('one', 1);
+		$this->Presenter->beforeRender($this->Controller);
+		$this->Presenter->set('two', 2);
+		$presenter = $this->Controller->viewVars['presenter'];
+		$this->assertEquals(1, $presenter->one);
+		$this->assertEquals(2, $presenter->two);
+	}
 }
