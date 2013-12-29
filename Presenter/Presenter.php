@@ -150,6 +150,7 @@ class Presenter implements arrayaccess {
 			} elseif (
 				$this->_controller &&
 				property_exists($this->_controller, 'View') &&
+				is_object($this->_controller->View) &&
 				property_exists($this->_controller->View, 'Helpers')
 			) {
 					$ret = $this->_controller->View->Helpers->{$property};
