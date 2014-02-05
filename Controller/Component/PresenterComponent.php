@@ -135,49 +135,69 @@ class PresenterComponent extends Component {
 
 	/**
 	 * Pass a string class name to this method to define the Presenter class that
-	 * will be created automatically and set to the view.
+	 * will be created automatically and set to the view. If no param is passed,
+	 * then the properties current value is returned.
 	 *
 	 * @access public
 	 * @param String $name
 	 */
-	public function uses($name) {
-		$this->_uses = $name;
-		if ($this->_defaultPresenter) {
-			$this->setDefaultPresenterToController();
+	public function uses($name = null) {
+		if ($name) {
+			$this->_uses = $name;
+			if ($this->_defaultPresenter) {
+				$this->setDefaultPresenterToController();
+			}
+		} else {
+			return $this->_uses;
 		}
 	}
 
 	/**
 	 * Pass a string to this method to change the variable that the default
-	 * presenter is set to in the view. It defaults to `presenter`.
+	 * presenter is set to in the view. It defaults to `presenter`. If no
+	 * param is passed, then the properties current value is returned.
 	 *
 	 * @access public
 	 * @param String $name
 	 */
-	public function viewVar($name) {
-		$this->_viewVar = $name;
+	public function viewVar($name = null) {
+		if ($name) {
+			$this->_viewVar = $name;
+		} else {
+			return $this->_viewVar;
+		}
 	}
 
 	/**
 	 * Pass a string to this method to change the default fallback presenter class
-	 * that will be used if the conventionally named classes don't exist.
+	 * that will be used if the conventionally named classes don't exist. If no
+	 * param is passed, then the properties current value is returned.
 	 *
 	 * @access public
 	 * @param String $name
 	 */
-	public function defaultClass($name) {
-		$this->_defaultClass = $name;
+	public function defaultClass($name = null) {
+		if ($name) {
+			$this->_defaultClass = $name;
+		} else {
+			return $this->_defaultClass;
+		}
 	}
 
 	/**
 	 * The options that get passed to the default presenter can be set by passing
-	 * an array to this method.
+	 * an array to this method. If no param is passed, then the properties current
+	 * value is returned.
 	 *
 	 * @access public
 	 * @param Array $options
 	 */
 	public function options($options = array()) {
-		$this->_options = $options;
+		if ($options) {
+			$this->_options = $options;
+		} else {
+			return $this->_options;
+		}
 	}
 
 	/**

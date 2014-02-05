@@ -59,6 +59,19 @@ class PresenterComponentTest extends CakeTestCase {
 		$this->assertInstanceOf('PresenterTestNamePresenter', $presenter);
 	}
 
+	public function testCanGetViewVarPropertyValue() {
+		$this->assertEquals('presenter', $this->Presenter->viewVar());
+	}
+
+	public function testCanGetDefaultClassPropertyValue() {
+		$this->assertEquals('Presenter', $this->Presenter->defaultClass());
+	}
+
+	public function testCanGetUsesPropertyValue() {
+		$this->Presenter->uses('SetUses');
+		$this->assertEquals('SetUses', $this->Presenter->uses());
+	}
+
 	public function testCanSetWhichPresenterToUse() {
 		$this->Presenter->uses('StrangeName');
 		$presenter = $this->Presenter->getDefaultPresenter();
