@@ -110,9 +110,9 @@ class PresenterTest extends CakeTestCase {
 		$mock->View = $this->getMock('View');
 		$presenter = new Presenter(array(), array(), $mock);
 		try {
-			$presenter->Time;
+			$presenter->Missing;
 		} catch (Exception $e) {
-			$this->assertRegExp('/Undefined property: Time in/', $e->getMessage());
+			$this->assertRegExp('/Undefined property: Missing in/', $e->getMessage());
 			return;
 		}
 		$this->assertTrue(false, 'Missing property error not thrown');
