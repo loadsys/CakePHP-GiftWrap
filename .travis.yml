@@ -1,0 +1,54 @@
+# Language Tests are Running In
+language: php
+
+# PHP Versions to Test
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+
+# Environment Variables to set
+env:
+  global:
+
+# Services to Enable
+services:
+
+# Branches to be built or not
+branches:
+  # Blacklist these branches
+  except:
+
+# Before Installing Software/Dependencies Needed
+before_install:
+  - git submodule update --init --recursive
+
+# Install Software/Dependencies Needed
+install:
+  - pear channel-discover pear.cakephp.org
+  - pear install --alldeps cakephp/CakePHP_CodeSniffer
+  - composer install --dev
+
+# Before the Test Script Runs
+before_script:
+  - git clone git://github.com/cakephp/cakephp ../cakephp && cd ../cakephp
+  - cp -R ../CakePHP-GiftWrap plugins/GiftWrap
+  - chmod -R 777 ./cakephp/app/tmp
+  - phpenv rehash
+
+# Test Script Call
+script:
+  - sh -c "phpcs -p --extensions=php --standard=CakePHP ../cakephp/plugins/GiftWrap/; ./lib/Cake/Console/cake test GiftWrap AllGiftWrap --stderr --coverage-clover build/logs/clover.xml;"
+
+# After a Successful Build
+after_success:
+
+# After a Failed Build
+after_failure:
+
+# After every Build
+after_script:
+
+# Notifications Settings
+notifications:
+  email: false
