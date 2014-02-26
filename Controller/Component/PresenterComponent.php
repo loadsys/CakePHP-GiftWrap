@@ -1,6 +1,7 @@
 <?php
 
 App::uses('Component', 'Controller');
+App::uses('PresenterFactory', 'GiftWrap.Lib');
 App::uses('Presenter', 'GiftWrap.Presenter');
 App::uses('PresenterNaming', 'GiftWrap.Lib');
 App::uses('PresenterListIterator', 'GiftWrap.Lib');
