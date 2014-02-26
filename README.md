@@ -6,18 +6,28 @@
 * CakePHP >= 2.1
 * PHP 5.3+
 
-
 ## Installation
 
-```
-git clone git://github.com:loadsys/CakePHP-GiftWrap.git Plugin/CakePHP-GiftWrap
-echo "CakePlugin::load('CakePHP-GiftWrap', array('bootstrap' => true));" >> Config/bootstrap.php
-```
 
+### Git ###
+
+````bash
+git clone git@github.com:loadsys/CakePHP-GiftWrap.git Plugin/GiftWrap
+````
+
+### Composer ###
+
+* Add to your `composer.json` file
+````php
+"require": {
+	"loadsys/cakephp_giftwrap": "dev-master"
+}
+````
 
 ## Usage
 
-Coming soon.
+1. Ensure the plugin is loaded in `app/Config/bootstrap.php` by calling `CakePlugin::load('GiftWrap', array('bootstrap' => true));`
+2. @TODO Complete this section
 
 
 ## API
@@ -44,7 +54,7 @@ Set the class that will be used as a fallback if the conventionally named presen
 
 ##### PresenterComponent::options($options)
 
-* **$options** *Array* 
+* **$options** *Array*
 	* contextKey *String* Which property of the Presenter will be the context. Default is `model`.
 
 Set the options array that will be passed to the creation of the default presenter.

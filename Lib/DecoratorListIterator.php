@@ -1,6 +1,6 @@
 <?php
 
-App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
+App::uses('PresenterListIterator', 'GiftWrap.Lib');
 
 /**
  * A specialized PresenterListIterator that assigns the element in each

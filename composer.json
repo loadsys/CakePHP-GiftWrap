@@ -4,14 +4,22 @@
   "description": "A CakePHP Presenter/Decorator Plugin",
   "keywords": ["cakephp","helper","presenters","decorators"],
   "licence": "MIT",
+  "homepage": "https://github.com/loadsys/CakePHP-GiftWrap",
   "authors": [
     {
       "name": "Joey Trapp",
       "homepage": "https://github.com/joeytrapp"
     }
   ],
+  "support": {
+    "issues": "https://github.com/loadsys/CakePHP-GiftWrap/issues",
+    "source": "https://github.com/loadsys/CakePHP-GiftWrap"
+  },
   "require": {
     "php": ">=5.3.0",
     "composer/installers": "*"
+  },
+  "extra": {
+    "installer-name": "GiftWrap"
   }
 }

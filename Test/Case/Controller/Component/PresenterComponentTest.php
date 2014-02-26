@@ -1,14 +1,14 @@
 <?php
 
 App::uses('Controller', 'Controller');
-App::uses('PresenterComponent', 'CakePHP-GiftWrap.Controller/Component');
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+App::uses('PresenterComponent', 'GiftWrap.Controller/Component');
+App::uses('Presenter', 'GiftWrap.Presenter');
 App::uses('CakeRequest', 'Network');
 App::uses('CakeResponse', 'Network');
 
 class PresenterTestController extends Controller {
 	public $name = 'PresenterTest';
-	public $components = array('CakePHP-GiftWrap.Presenter');
+	public $components = array('GiftWrap.Presenter');
 }
 
 class StrangeNamePresenter extends Presenter {

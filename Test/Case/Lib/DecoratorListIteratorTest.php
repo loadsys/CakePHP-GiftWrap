@@ -1,7 +1,7 @@
 <?php
 
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
-App::uses('DecoratorListIterator', 'CakePHP-GiftWrap.Lib');
+App::uses('Presenter', 'GiftWrap.Presenter');
+App::uses('DecoratorListIterator', 'GiftWrap.Lib');
 
 class DecoratorListIteratorTest extends CakeTestCase {
 	public function testWrapsEachItemInArrayInAPresenter() {
