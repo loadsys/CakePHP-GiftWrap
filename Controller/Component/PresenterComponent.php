@@ -1,10 +1,10 @@
 <?php
 
 App::uses('Component', 'Controller');
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
-App::uses('PresenterNaming', 'CakePHP-GiftWrap.Lib');
-App::uses('PresenterListIterator', 'CakePHP-GiftWrap.Lib');
-App::uses('DecoratorListIterator', 'CakePHP-GiftWrap.Lib');
+App::uses('Presenter', 'GiftWrap.Presenter');
+App::uses('PresenterNaming', 'GiftWrap.Lib');
+App::uses('PresenterListIterator', 'GiftWrap.Lib');
+App::uses('DecoratorListIterator', 'GiftWrap.Lib');
 
 /**
  * User interface for using presenters.

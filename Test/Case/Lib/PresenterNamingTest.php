@@ -1,7 +1,7 @@
 <?php
 
-App::uses('PresenterNaming', 'CakePHP-GiftWrap.Lib');
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+App::uses('PresenterNaming', 'GiftWrap.Lib');
+App::uses('Presenter', 'GiftWrap.Presenter');
 
 class NamingTestPresenter extends Presenter {
 }

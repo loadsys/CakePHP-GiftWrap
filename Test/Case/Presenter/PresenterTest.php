@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Presenter', 'CakePHP-GiftWrap.Presenter');
+App::uses('Presenter', 'GiftWrap.Presenter');
 App::uses('View', 'View');
 
 class TestView {
