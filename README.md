@@ -11,6 +11,10 @@
 
 ### Git ###
 
+````bash
+git clone git@github.com:loadsys/CakePHP-GiftWrap.git Plugin/GiftWrap
+````
+
 ### Composer ###
 
 * Add to your `composer.json` file
@@ -18,10 +22,6 @@
 "require": {
 	"loadsys/cakephp_giftwrap": "dev-master"
 }
-````
-
-````bash
-git clone git@github.com:loadsys/CakePHP-GiftWrap.git Plugin/GiftWrap
 ````
 
 ## Usage
