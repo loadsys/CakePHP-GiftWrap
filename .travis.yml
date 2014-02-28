@@ -38,7 +38,7 @@ before_script:
 
 # Test Script Call
 script:
-  - sh -c "phpcs -p --extensions=php --standard=CakePHP --report-full --report-summary ./plugins/GiftWrap/Controller ./plugins/GiftWrap/Lib ./plugins/GiftWrap/Presenter; ./lib/Cake/Console/cake test GiftWrap AllGiftWrap --stderr --coverage-clover build/logs/clover.xml;"
+  - sh -c "phpcs -p --extensions=php --standard=CakePHP --report-full --report-summary ./plugins/GiftWrap/Controller ./plugins/GiftWrap/Lib ./plugins/GiftWrap/Presenter; ./lib/Cake/Console/cake test GiftWrap AllGiftWrap --stderr --coverage-clover build/logs/clover.xml --coverage-html build/logs/coverage;"
 
 # After a Successful Build
 after_success:
