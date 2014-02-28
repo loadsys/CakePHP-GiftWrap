@@ -1,5 +1,6 @@
 # CakePHP-GiftWrap
 
+[![Build Status](https://travis-ci.org/loadsys/CakePHP-GiftWrap.png)](https://travis-ci.org/loadsys/CakePHP-GiftWrap)
 
 ## Requirements
 
