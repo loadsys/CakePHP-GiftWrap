@@ -54,7 +54,7 @@ notifications:
   email: false
   webhooks:
     urls:
-      - http://wemux.loadsysdev/slack/travis
+      - http://wemux.loadsysdev.com/slack/travis
     on_failure: always
     on_success: always
     on_start: false
